@@ -19,21 +19,12 @@ services:
     depends_on:
       - db_mysql
       - db_redis
+    deploy:
+      mode: replicated
+      replicas: 20
     volumes:
-      - /root/www/data/mysql:/var/www/html/
+      - ../:/var/www/html/
     restart: always
-
-#====================SUPERVISOR====================
-  # supervisor:
-  #   image: daolamsoncntt/supervisor:${VERSION_PHP}
-  #   depends_on:
-  #     - db_mysql
-  #     - db_redis
-  #   volumes:
-  #     - ./config/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-  #     - ${PATH_API}:/var/www/html/
-  #   command: bash -c "service supervisor start && php-fpm"
-  #   restart: always
 
 #====================MYSQL====================
   db_mysql:
@@ -51,6 +42,6 @@ services:
   db_redis:
     image: redis:latest
     ports:
-      - 63791:6379   
+      - 63791:6379
     restart: always
 

@@ -1,5 +1,5 @@
 <?php
-
+die('test xem co update code ko');
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

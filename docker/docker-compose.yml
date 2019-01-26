@@ -1,34 +1,26 @@
 version: '3.5'
 
-networks:
-  busrental_network:
-    driver: bridge
-
 services:
 #====================NGINX====================
   nginx:
     image: daolamsoncntt/nginx-node:8
     ports:
-      - ${PORT_HAVAZ}:80
+      - 6060:80
     volumes:
       - ./config/000-default.conf:/etc/nginx/conf.d/default.conf
-      - ${PATH_API}:/var/www/html/
+      - ../:/var/www/html/
     depends_on:
       - php_fpm
-    networks:       
-      - busrental_network     
     restart: always
 
 #====================PHP FPM====================
   php_fpm:
-    image: daolamsoncntt/php:${VERSION_PHP}
+    image: daolamsoncntt/php:7.2
     depends_on:
       - db_mysql
       - db_redis
     volumes:
-      - ${PATH_API}:/var/www/html/
-    networks:       
-     - busrental_network
+      - /root/www/data/mysql:/var/www/html/
     restart: always
 
 #====================SUPERVISOR====================
@@ -40,30 +32,24 @@ services:
   #   volumes:
   #     - ./config/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
   #     - ${PATH_API}:/var/www/html/
-  #   networks:       
-  #     - busrental_network
   #   command: bash -c "service supervisor start && php-fpm"
   #   restart: always
 
 #====================MYSQL====================
   db_mysql:
-    image: mysql:${VERSION_MYSQL}
+    image: mysql:5.7
     ports:
-      - ${PORT_MYSQL}:3306
+      - 33061:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=db_blog
     volumes:
-      - ${PATH_MYSQL}:/var/lib/mysql
-    networks:       
-      - busrental_network
+      - ../storage/data/mysql:/var/lib/mysql
     restart: always
 
 #====================REDIS====================
   db_redis:
     image: redis:latest
     ports:
-      - ${PORT_REDIS}:6379
-    networks:       
-      - busrental_network     
+      - 63791:6379   
     restart: always

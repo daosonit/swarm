@@ -9,6 +9,9 @@ services:
     volumes:
       - ./config/000-default.conf:/etc/nginx/conf.d/default.conf
       - ../:/var/www/html/
+    deploy:
+      mode: replicated
+      replicas: 1
     depends_on:
       - php_fpm
     restart: always
@@ -34,8 +37,11 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=db_blog
+    deploy:
+      mode: replicated
+      replicas: 1
     volumes:
-      - ../storage/data/mysql:/var/lib/mysql
+      - ../../storage/data/mysql:/var/lib/mysql
     restart: always
 
 #====================REDIS====================
@@ -43,5 +49,8 @@ services:
     image: redis:latest
     ports:
       - 63791:6379
+    deploy:
+      mode: replicated
+      replicas: 1
     restart: always
 
